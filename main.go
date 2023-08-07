@@ -10,6 +10,19 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// @title Demo CSV API
+// @version 1.0
+// @description Language: Golang. Core: Fiber
+
+// @contact.name CubeSystem Viet Nam
+// @contact.url https://vn-cubesystem.com/
+// @contact.email info@vn-cubesystem.com
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name x-csv-key
+// @securityDefinitions.apikey ApiTokenAuth
+// @in header
+// @name x-csv-token
 func main() {
 	app := fiber.New()
 

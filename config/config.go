@@ -6,6 +6,13 @@ import (
 	"github.com/joho/godotenv"
 )
 
+type DataResponse struct {
+	Status        bool        `json:"status" `
+	Message       string      `json:"message"`
+	Data          interface{} `json:"data"`
+	ValidateError interface{} `json:"validate_error"`
+}
+
 func Get(key string) string {
 	err := godotenv.Load(".env")
 	if err != nil {
