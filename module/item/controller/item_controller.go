@@ -49,7 +49,7 @@ func HanleCreateItem(c *fiber.Ctx) error {
 	// pre-process title - trim all spaces
 	dataItem.Title = strings.TrimSpace(dataItem.Title)
 
-	if err := biz(c).CreateNewItem(c, &dataItem); err != nil {
+	if err := biz(c).CreateItem(c, &dataItem); err != nil {
 		response.Message = err.Error()
 		return c.JSON(response)
 	}

@@ -22,7 +22,7 @@ func ToDoItemBiz(store TodoItemStorage) *ToDoBiz {
 	return &ToDoBiz{store: store}
 }
 
-func (biz *ToDoBiz) CreateNewItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
+func (biz *ToDoBiz) CreateItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
 	// do not allow "finished" status when creating a new task
 	data.Status = "Doing" // set to default
 	if err := biz.store.CreateItem(ctx, data); err != nil {

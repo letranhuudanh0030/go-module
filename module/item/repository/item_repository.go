@@ -23,7 +23,6 @@ func (s *postgresqlStorage) CreateItem(ctx *fiber.Ctx, data *todomodel.ToDoItem)
 	return nil
 }
 
-// FindItem implements todoservice.TodoItemStorage.
 func (s *postgresqlStorage) FindItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
 	if err := s.db.First(data).Error; err != nil {
 		return err
@@ -58,7 +57,6 @@ func (s *postgresqlStorage) UpdateItem(ctx *fiber.Ctx, data *todomodel.ToDoItem)
 }
 
 func (s *postgresqlStorage) DeleteItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
-
 	if err := s.db.First(data).Error; err != nil {
 		return err
 	}
