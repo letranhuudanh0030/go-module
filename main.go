@@ -5,9 +5,10 @@ import (
 	"log"
 	"todo/config"
 	"todo/database"
-	"todo/module"
+	"todo/modules"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 // @title Demo CSV API
@@ -26,16 +27,15 @@ import (
 func main() {
 	app := fiber.New()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
+	// Initialize default config
+	app.Use(cors.New())
 
 	if !database.Connect() {
 		panic("Fail connection database")
 	}
 
-	module.AutoMigrate()
-	module.InitRoute(app)
+	modules.AutoMigrate()
+	modules.InitRoute(app)
 
 	port := config.Get("ENV_PORT")
 
