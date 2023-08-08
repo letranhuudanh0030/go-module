@@ -4,7 +4,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
@@ -58,77 +57,16 @@ func (t *ToDoItem) BeforeUpdate(tx *gorm.DB) (err error) {
 
 func (t *ToDoItem) AfterDelete(tx *gorm.DB) (err error) {
 	username, _ := tx.Get("username")
+	t.LogVersion += 1
 
 	if t.DeletedAt.Valid {
-		if err := tx.Model(t).Unscoped().Updates(map[string]interface{}{
-			"deleted_by": username.(string),
+		if err := tx.Model(t).Unscoped().UpdateColumns(map[string]interface{}{
+			"log_version": t.LogVersion,
+			"deleted_by":  username.(string),
 		}).Error; err != nil {
 			return err
 		}
 	}
 
 	return
-}
-
-type postgresqlStorage struct {
-	db *gorm.DB
-}
-
-func NewPostgreSQLStorage(db *gorm.DB) *postgresqlStorage {
-	return &postgresqlStorage{db: db}
-}
-
-func (s *postgresqlStorage) CreateItem(ctx *fiber.Ctx, data *ToDoItem) error {
-	if err := s.db.Create(data).Error; err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// FindItem implements todobiz.TodoItemStorage.
-func (s *postgresqlStorage) FindItem(ctx *fiber.Ctx, data *ToDoItem) error {
-	if err := s.db.First(data).Error; err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (s *postgresqlStorage) FindAll(ctx *fiber.Ctx, data *[]ToDoItem) error {
-	if err := s.db.Find(data).Error; err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (s *postgresqlStorage) UpdateItem(ctx *fiber.Ctx, data *ToDoItem) error {
-	var params ToDoItem
-
-	params.Title = data.Title
-	params.Status = data.Status
-
-	if err := s.db.First(data).Error; err != nil {
-		return err
-	}
-
-	if err := s.db.Model(data).Updates(params).Error; err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (s *postgresqlStorage) DeleteItem(ctx *fiber.Ctx, data *ToDoItem) error {
-
-	if err := s.db.First(data).Error; err != nil {
-		return err
-	}
-
-	if err := s.db.Delete(data).Error; err != nil {
-		return err
-	}
-
-	return nil
 }

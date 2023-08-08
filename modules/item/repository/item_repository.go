@@ -1,69 +1,71 @@
-package todobiz
+package repository
 
 import (
-	"errors"
 	todomodel "todo/modules/item/model"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
-type TodoItemStorage interface {
-	CreateItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error
-	FindItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error
-	FindAll(ctx *fiber.Ctx, data *[]todomodel.ToDoItem) error
-	UpdateItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error
-	DeleteItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error
+type postgresqlStorage struct {
+	db *gorm.DB
 }
 
-type ToDoBiz struct {
-	store TodoItemStorage
+func NewPostgreSQLStorage(db *gorm.DB) *postgresqlStorage {
+	return &postgresqlStorage{db: db}
 }
 
-func ToDoItemBiz(store TodoItemStorage) *ToDoBiz {
-	return &ToDoBiz{store: store}
-}
-
-func (biz *ToDoBiz) CreateNewItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
-
-	// do not allow "finished" status when creating a new task
-	data.Status = "Doing" // set to default
-
-	if err := biz.store.CreateItem(ctx, data); err != nil {
+func (s *postgresqlStorage) CreateItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
+	if err := s.db.Create(data).Error; err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (biz *ToDoBiz) FindItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
-	if data.Id == 0 {
-		return errors.New("id can not be blank")
-	}
-
-	if err := biz.store.FindItem(ctx, data); err != nil {
+// FindItem implements todobiz.TodoItemStorage.
+func (s *postgresqlStorage) FindItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
+	if err := s.db.First(data).Error; err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (biz *ToDoBiz) FindAll(ctx *fiber.Ctx, data *[]todomodel.ToDoItem) error {
-	if err := biz.store.FindAll(ctx, data); err != nil {
+func (s *postgresqlStorage) FindAll(ctx *fiber.Ctx, data *[]todomodel.ToDoItem) error {
+	if err := s.db.Find(data).Error; err != nil {
 		return err
 	}
+
 	return nil
 }
 
-func (biz *ToDoBiz) UpdateItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
-	if err := biz.store.UpdateItem(ctx, data); err != nil {
+func (s *postgresqlStorage) UpdateItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
+	var params todomodel.ToDoItem
+
+	params.Title = data.Title
+	params.Status = data.Status
+
+	if err := s.db.First(data).Error; err != nil {
 		return err
 	}
+
+	if err := s.db.Model(data).Updates(params).Error; err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (biz *ToDoBiz) DeleteItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
-	if err := biz.store.DeleteItem(ctx, data); err != nil {
+func (s *postgresqlStorage) DeleteItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
+
+	if err := s.db.First(data).Error; err != nil {
 		return err
 	}
+
+	if err := s.db.Delete(data).Error; err != nil {
+		return err
+	}
+
 	return nil
 }

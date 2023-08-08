@@ -9,14 +9,15 @@ import (
 	"todo/config"
 	"todo/database"
 	todomodel "todo/modules/item/model"
-	todobiz "todo/modules/item/repository"
+	todostorage "todo/modules/item/repository"
+	todobiz "todo/modules/item/service"
 	"todo/utils"
 )
 
 func biz(c *fiber.Ctx) *todobiz.ToDoBiz {
 	// setup dependencies
 	db := database.DB.Set("username", c.Locals("username"))
-	storage := todomodel.NewPostgreSQLStorage(db)
+	storage := todostorage.NewPostgreSQLStorage(db)
 	return todobiz.ToDoItemBiz(storage)
 }
 
