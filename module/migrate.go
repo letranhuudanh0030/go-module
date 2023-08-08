@@ -1,7 +1,7 @@
-package modules
+package module
 
 import (
-	todoMigrate "todo/modules/item/migrate"
+	todoMigrate "todo/module/item/migrate"
 )
 
 func AutoMigrate() {

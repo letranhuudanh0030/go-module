@@ -2,7 +2,7 @@ package todoroute
 
 import (
 	"todo/middleware"
-	todoctrl "todo/modules/item/controller"
+	todoctrl "todo/module/item/controller"
 
 	"github.com/gofiber/fiber/v2"
 )

@@ -1,7 +1,7 @@
-package modules
+package module
 
 import (
-	todoroute "todo/modules/item/route"
+	todoroute "todo/module/item/route"
 
 	_ "todo/docs"
 

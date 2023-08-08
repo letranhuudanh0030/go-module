@@ -1,7 +1,7 @@
-package todobiz
+package todoservice
 
 import (
-	todomodel "todo/modules/item/model"
+	todomodel "todo/module/item/model"
 
 	"github.com/gofiber/fiber/v2"
 )

@@ -1,7 +1,7 @@
 package repository
 
 import (
-	todomodel "todo/modules/item/model"
+	todomodel "todo/module/item/model"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -23,7 +23,7 @@ func (s *postgresqlStorage) CreateItem(ctx *fiber.Ctx, data *todomodel.ToDoItem)
 	return nil
 }
 
-// FindItem implements todobiz.TodoItemStorage.
+// FindItem implements todoservice.TodoItemStorage.
 func (s *postgresqlStorage) FindItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
 	if err := s.db.First(data).Error; err != nil {
 		return err

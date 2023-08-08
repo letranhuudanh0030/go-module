@@ -8,17 +8,17 @@ import (
 
 	"todo/config"
 	"todo/database"
-	todomodel "todo/modules/item/model"
-	todostorage "todo/modules/item/repository"
-	todobiz "todo/modules/item/service"
-	"todo/utils"
+	todomodel "todo/module/item/model"
+	todorepo "todo/module/item/repository"
+	todoservice "todo/module/item/service"
+	"todo/util"
 )
 
-func biz(c *fiber.Ctx) *todobiz.ToDoBiz {
+func biz(c *fiber.Ctx) *todoservice.ToDoBiz {
 	// setup dependencies
 	db := database.DB.Set("username", c.Locals("username"))
-	storage := todostorage.NewPostgreSQLStorage(db)
-	return todobiz.ToDoItemBiz(storage)
+	storage := todorepo.NewPostgreSQLStorage(db)
+	return todoservice.ToDoItemBiz(storage)
 }
 
 // Create a new item ================================================================================
@@ -40,7 +40,7 @@ func HanleCreateItem(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
-	if errors := utils.Validator(dataItem); errors != nil {
+	if errors := util.Validator(dataItem); errors != nil {
 		response.Message = config.VALIDATE
 		response.ValidateError = errors
 		return c.JSON(response)

@@ -5,7 +5,7 @@ import (
 	"log"
 	"todo/config"
 	"todo/database"
-	"todo/modules"
+	"todo/module"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -34,8 +34,8 @@ func main() {
 		panic("Fail connection database")
 	}
 
-	modules.AutoMigrate()
-	modules.InitRoute(app)
+	module.AutoMigrate()
+	module.InitRoute(app)
 
 	port := config.Get("ENV_PORT")
 
