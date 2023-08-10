@@ -37,6 +37,7 @@ func main() {
 	module.AutoMigrate()
 	module.InitRoute(app)
 
+	// Run App
 	port := config.Get("ENV_PORT")
 
 	addr := flag.String("addr", ":"+port, "http service address")

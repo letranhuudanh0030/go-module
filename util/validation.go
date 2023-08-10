@@ -55,18 +55,18 @@ func (v XValidator) Validate(data interface{}) []ErrorResponse {
 }
 
 func getMessageCode(tag string) string {
-	var code string
+	var msgCode string
 
 	switch tag {
 	case "required":
-		code = config.REQUIRED
+		msgCode = config.REQUIRED
 	case "min":
-		code = config.MIN_LENGTH
+		msgCode = config.MIN_LENGTH
 	case "max":
-		code = config.MAX_LENGTH
+		msgCode = config.MAX_LENGTH
 	}
 
-	return code
+	return msgCode
 }
 
 func Validator(data interface{}) map[string]string {

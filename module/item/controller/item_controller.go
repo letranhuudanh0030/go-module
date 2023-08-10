@@ -14,9 +14,10 @@ import (
 	"todo/util"
 )
 
-func biz(c *fiber.Ctx) *todoservice.ToDoBiz {
+func setup(c *fiber.Ctx) *todoservice.ToDoBiz {
 	// setup dependencies
 	db := database.DB.Set("username", c.Locals("username"))
+	db.Set("timezone", c.Locals("timezone"))
 	storage := todorepo.NewPostgreSQLStorage(db)
 	return todoservice.ToDoItemBiz(storage)
 }
@@ -49,7 +50,7 @@ func HanleCreateItem(c *fiber.Ctx) error {
 	// pre-process title - trim all spaces
 	dataItem.Title = strings.TrimSpace(dataItem.Title)
 
-	if err := biz(c).CreateItem(c, &dataItem); err != nil {
+	if err := setup(c).CreateItem(c, &dataItem); err != nil {
 		response.Message = err.Error()
 		return c.JSON(response)
 	}
@@ -82,7 +83,7 @@ func HandleFindItem(c *fiber.Ctx) error {
 
 	dataItem.Id = id
 
-	if err := biz(c).FindItem(c, &dataItem); err != nil {
+	if err := setup(c).FindItem(c, &dataItem); err != nil {
 		response.Message = err.Error()
 		return c.JSON(response)
 	}
@@ -105,7 +106,7 @@ func HandleFindAll(c *fiber.Ctx) error {
 	var response config.DataResponse
 	var dataItem []todomodel.ToDoItem
 
-	if err := biz(c).FindAll(c, &dataItem); err != nil {
+	if err := setup(c).FindAll(c, &dataItem); err != nil {
 		response.Message = err.Error()
 		return c.JSON(response)
 	}
@@ -143,7 +144,7 @@ func HandleEditItem(c *fiber.Ctx) error {
 
 	dataItem.Id = id
 
-	if err := biz(c).UpdateItem(c, &dataItem); err != nil {
+	if err := setup(c).UpdateItem(c, &dataItem); err != nil {
 		response.Message = err.Error()
 		return c.JSON(response)
 	}
@@ -175,7 +176,7 @@ func HandleDeleteItem(c *fiber.Ctx) error {
 
 	dataItem.Id = id
 
-	if err := biz(c).DeleteItem(c, &dataItem); err != nil {
+	if err := setup(c).DeleteItem(c, &dataItem); err != nil {
 		response.Message = err.Error()
 		return c.JSON(response)
 	}

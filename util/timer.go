@@ -1,0 +1,35 @@
+package util
+
+import (
+	"reflect"
+	"time"
+
+	"gorm.io/gorm"
+)
+
+func ConvertTimeFieldsToTimeZone(s interface{}, timezone *time.Location) {
+	val := reflect.ValueOf(s).Elem()
+
+	for i := 0; i < val.NumField(); i++ {
+		field := val.Field(i)
+		fieldType := field.Type()
+
+		if fieldType == reflect.TypeOf(time.Time{}) || fieldType == reflect.TypeOf(&time.Time{}) {
+			// Convert time.Time and *time.Time fields
+			if field.CanSet() && !field.IsNil() {
+				convertedTime := field.Interface().(*time.Time).In(timezone)
+				field.Set(reflect.ValueOf(&convertedTime))
+			}
+		} else if fieldType == reflect.TypeOf(gorm.DeletedAt{}) {
+			// Convert gorm.DeletedAt fields
+			if field.CanSet() {
+				deletedAt := field.Interface().(gorm.DeletedAt)
+				if deletedAt.Valid {
+					convertedTime := deletedAt.Time.In(timezone)
+					newDeletedAt := gorm.DeletedAt{Time: convertedTime, Valid: deletedAt.Valid}
+					field.Set(reflect.ValueOf(newDeletedAt))
+				}
+			}
+		}
+	}
+}

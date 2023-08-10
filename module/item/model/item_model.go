@@ -3,6 +3,7 @@ package todomodel
 import (
 	"errors"
 	"time"
+	"todo/util"
 
 	"gorm.io/gorm"
 )
@@ -66,6 +67,17 @@ func (t *ToDoItem) AfterDelete(tx *gorm.DB) (err error) {
 		}).Error; err != nil {
 			return err
 		}
+	}
+
+	return
+}
+
+func (t *ToDoItem) AfterFind(tx *gorm.DB) (err error) {
+	iTimezone, _ := tx.Get("timezone")
+	tz := iTimezone.(string)
+	if tz != "" {
+		loc, _ := time.LoadLocation(tz)
+		util.ConvertTimeFieldsToTimeZone(t, loc)
 	}
 
 	return
