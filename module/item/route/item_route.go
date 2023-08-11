@@ -8,7 +8,7 @@ import (
 )
 
 func InitRoute(app *fiber.App) {
-	v1 := app.Group("/v1", middleware.AppInfo)
+	v1 := app.Group("/v1", middleware.AppInfo, middleware.AppAuthen)
 	v1.Post("/items", todoctrl.HanleCreateItem)
 	v1.Get("/items", todoctrl.HandleFindAll)
 	v1.Get("/items/:id", todoctrl.HandleFindItem)

@@ -32,6 +32,7 @@ func setup(c *fiber.Ctx) *todoservice.ToDoBiz {
 // @Success 200 {object} config.DataResponse "desc"
 // @Router /v1/items [post]
 // @Security ApiKeyAuth
+// @Security ApiTokenAuth
 func HanleCreateItem(c *fiber.Ctx) error {
 	var response config.DataResponse
 	var dataItem todomodel.ToDoItem
@@ -70,6 +71,7 @@ func HanleCreateItem(c *fiber.Ctx) error {
 // @Success 200 {object} config.DataResponse "desc"
 // @Router /v1/items/{id} [get]
 // @Security ApiKeyAuth
+// @Security ApiTokenAuth
 func HandleFindItem(c *fiber.Ctx) error {
 	var response config.DataResponse
 	var dataItem todomodel.ToDoItem
@@ -102,6 +104,7 @@ func HandleFindItem(c *fiber.Ctx) error {
 // @Success 200 {object} config.DataResponse "desc"
 // @Router /v1/items [get]
 // @Security ApiKeyAuth
+// @Security ApiTokenAuth
 func HandleFindAll(c *fiber.Ctx) error {
 	var response config.DataResponse
 	var dataItem []todomodel.ToDoItem
@@ -127,6 +130,7 @@ func HandleFindAll(c *fiber.Ctx) error {
 // @Success 200 {object} config.DataResponse "desc"
 // @Router /v1/items/{id} [put]
 // @Security ApiKeyAuth
+// @Security ApiTokenAuth
 func HandleEditItem(c *fiber.Ctx) error {
 	var response config.DataResponse
 	var dataItem todomodel.ToDoItem
@@ -164,6 +168,7 @@ func HandleEditItem(c *fiber.Ctx) error {
 // @Success 200 {object} config.DataResponse "desc"
 // @Router /v1/items/{id} [delete]
 // @Security ApiKeyAuth
+// @Security ApiTokenAuth
 func HandleDeleteItem(c *fiber.Ctx) error {
 	var response config.DataResponse
 	var dataItem todomodel.ToDoItem

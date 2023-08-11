@@ -20,11 +20,53 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/login": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "User login",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Login",
+                "parameters": [
+                    {
+                        "description": " ",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.LoginParam"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "desc",
+                        "schema": {
+                            "$ref": "#/definitions/config.DataResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/items": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
+                    },
+                    {
+                        "ApiTokenAuth": []
                     }
                 ],
                 "description": "Find all",
@@ -51,6 +93,9 @@ const docTemplate = `{
                 "security": [
                     {
                         "ApiKeyAuth": []
+                    },
+                    {
+                        "ApiTokenAuth": []
                     }
                 ],
                 "description": "Create a new item",
@@ -90,6 +135,9 @@ const docTemplate = `{
                 "security": [
                     {
                         "ApiKeyAuth": []
+                    },
+                    {
+                        "ApiTokenAuth": []
                     }
                 ],
                 "description": "Find an item",
@@ -125,6 +173,9 @@ const docTemplate = `{
                 "security": [
                     {
                         "ApiKeyAuth": []
+                    },
+                    {
+                        "ApiTokenAuth": []
                     }
                 ],
                 "description": "Update an item",
@@ -169,6 +220,9 @@ const docTemplate = `{
                 "security": [
                     {
                         "ApiKeyAuth": []
+                    },
+                    {
+                        "ApiTokenAuth": []
                     }
                 ],
                 "description": "Delete an item",
@@ -214,6 +268,17 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "validate_error": {}
+            }
+        },
+        "controller.LoginParam": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
             }
         },
         "todomodel.CreateItem": {

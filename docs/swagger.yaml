@@ -8,6 +8,13 @@ definitions:
         type: boolean
       validate_error: {}
     type: object
+  controller.LoginParam:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   todomodel.CreateItem:
     properties:
       title:
@@ -29,6 +36,30 @@ info:
   title: Demo CSV API
   version: "1.0"
 paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: User login
+      parameters:
+      - description: ' '
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.LoginParam'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            $ref: '#/definitions/config.DataResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Login
+      tags:
+      - User
   /v1/items:
     get:
       consumes:
@@ -43,6 +74,7 @@ paths:
             $ref: '#/definitions/config.DataResponse'
       security:
       - ApiKeyAuth: []
+      - ApiTokenAuth: []
       summary: Find all
       tags:
       - Item
@@ -66,6 +98,7 @@ paths:
             $ref: '#/definitions/config.DataResponse'
       security:
       - ApiKeyAuth: []
+      - ApiTokenAuth: []
       summary: Create a new item
       tags:
       - Item
@@ -89,6 +122,7 @@ paths:
             $ref: '#/definitions/config.DataResponse'
       security:
       - ApiKeyAuth: []
+      - ApiTokenAuth: []
       summary: Delete an item
       tags:
       - Item
@@ -111,6 +145,7 @@ paths:
             $ref: '#/definitions/config.DataResponse'
       security:
       - ApiKeyAuth: []
+      - ApiTokenAuth: []
       summary: Find an item
       tags:
       - Item
@@ -139,6 +174,7 @@ paths:
             $ref: '#/definitions/config.DataResponse'
       security:
       - ApiKeyAuth: []
+      - ApiTokenAuth: []
       summary: Update an item
       tags:
       - Item

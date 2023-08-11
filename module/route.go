@@ -1,6 +1,7 @@
 package module
 
 import (
+	authroute "todo/module/authen/route"
 	todoroute "todo/module/item/route"
 
 	_ "todo/docs"
@@ -12,4 +13,5 @@ import (
 func InitRoute(app *fiber.App) {
 	app.Get("/document/*", swagger.HandlerDefault)
 	todoroute.InitRoute(app)
+	authroute.InitRoute(app)
 }

@@ -1,7 +1,10 @@
 package middleware
 
 import (
+	"strings"
 	"todo/config"
+	"todo/database"
+	"todo/util"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -18,5 +21,34 @@ func AppInfo(c *fiber.Ctx) error {
 		return c.JSON(response)
 	}
 
+	return c.Next()
+}
+
+// Authen
+func AppAuthen(c *fiber.Ctx) error {
+	store := database.Store
+	is_error := 0
+	response := new(config.DataResponse)
+
+	// Check token valid
+	tokenData, err := util.ExtractTokenData(c)
+	if err != nil {
+		response.Status = false
+		response.Message = config.TOKEN_INCORRECT
+		return c.JSON(response)
+	}
+
+	// Check session Exist and comparse token
+	sess, err := store.Get(tokenData.Username)
+	authen := strings.Split(c.Get("x-csv-token"), " ")
+	if err != nil || len(sess) == 0 || string(sess) != authen[1] {
+		is_error = 1
+	}
+
+	if is_error == 1 {
+		response.Status = false
+		response.Message = config.TOKEN_INCORRECT
+		return c.JSON(response)
+	}
 	return c.Next()
 }
