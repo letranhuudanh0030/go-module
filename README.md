@@ -1,4 +1,4 @@
-Wellcome to CubebooK Project
+Wellcome to Demo Project
 
 - `Setup #############################`
 
@@ -11,7 +11,6 @@ Wellcome to CubebooK Project
 
 - `Project info #################################`
 
-  - Project manager: Minh Phụng - 1208
   - Version: 1.0
   - Back-end API
   - Language: Golang
@@ -33,16 +32,7 @@ Wellcome to CubebooK Project
     - Build Doc: swag init
     - path /document/index.html
 
-- `Git #############################`
-
-  - Pull new code before doing task
-  - Push code:
-    1. If Screen: screen_id. Ex MSGS0001
-    2. If issue: issuecode.
-    3. Other task: name_develop. Ex nam_develop
-
 - `Version/ Function #############################`
-  - 2023-03-05: Init Source.
+  - 2023-08-11: Init Source.
 
-* `If error or any bug please contact: Chatwork minhphung@vn-cubesystem.com`
 * `Thanks for README`
