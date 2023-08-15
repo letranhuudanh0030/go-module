@@ -2,10 +2,13 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"todo/config"
 	"todo/database"
 	"todo/module"
+	"todo/module/moduleA"
+	"todo/module/moduleB"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -36,6 +39,22 @@ func main() {
 
 	module.AutoMigrate()
 	module.InitRoute(app)
+
+	// Test
+	database.DB.AutoMigrate(&moduleA.User{}, &moduleB.Order{})
+
+	database.DB.Migrator().CreateConstraint(&moduleB.Order{}, "User")
+	database.DB.Migrator().CreateConstraint(&moduleB.Order{}, "fk_orders_users")
+
+	userService := moduleA.NewUserServiceImpl()
+	orderService := moduleB.NewOrderServiceImpl(userService)
+
+	orderID := 123
+	orderWithUser := orderService.GetOrderByID(orderID)
+
+	fmt.Printf("General: %+v\n", orderWithUser)
+	fmt.Printf("Order: %+v\n", orderWithUser.Order)
+	fmt.Printf("User: %+v\n", orderWithUser.User)
 
 	// Run App
 	port := config.Get("ENV_PORT")
