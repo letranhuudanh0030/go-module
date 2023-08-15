@@ -14,11 +14,13 @@ func AppInfo(c *fiber.Ctx) error {
 	app_key := c.Get("x-csv-key")
 	response := new(config.DataResponse)
 	userToken, _ := util.ExtractTokenData(c)
-	c.Locals("username", userToken.Username)
+	if userToken != nil {
+		c.Locals("username", userToken.Username)
+	}
 	c.Locals("timezone", "America/Los_Angeles") // header request: Timezone from FE
 	if len(app_key) == 0 || app_key != config.Get("APP_KEY") {
 		response.Status = false
-		// response.Message = config.GetMessageCode("KEY_NOT_FOUND")
+		response.Message = config.KEY_NOT_FOUND
 		return c.JSON(response)
 	}
 
