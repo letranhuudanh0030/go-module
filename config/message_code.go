@@ -36,4 +36,10 @@ const (
 	TOKEN_INCORRECT string = "MSG_S0002"
 	// Unauthorized
 	UNAUTHORIZED string = "MSG_S0003"
+	// Wrong format date
+	FORMAT_DATE = "MSG_V1003"
+	// Time Error
+	TIME_ERROR = "MSG_V1004"
+	// Wrong language
+	VALID_LANGUAGE = "MSG_V1005"
 )

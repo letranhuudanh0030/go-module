@@ -8,7 +8,7 @@ import (
 
 	"todo/config"
 	"todo/database"
-	todomodel "todo/module/item/model"
+	domainmdl "todo/domain/model"
 	todorepo "todo/module/item/repository"
 	todoservice "todo/module/item/service"
 	"todo/util"
@@ -26,7 +26,7 @@ func setup(c *fiber.Ctx) *todoservice.ToDoBiz {
 // @Tags Item
 // @Summary Create a new item
 // @Description Create a new item
-// @Param body body todomodel.CreateItem true " "
+// @Param body body domainmdl.CreateItem true " "
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} config.DataResponse "desc"
@@ -35,7 +35,7 @@ func setup(c *fiber.Ctx) *todoservice.ToDoBiz {
 // @Security ApiTokenAuth
 func HanleCreateItem(c *fiber.Ctx) error {
 	var response config.DataResponse
-	var dataItem todomodel.ToDoItem
+	var dataItem domainmdl.ToDoItem
 
 	if err := c.BodyParser(&dataItem); err != nil {
 		response.Message = config.PARAM_ERROR
@@ -74,7 +74,7 @@ func HanleCreateItem(c *fiber.Ctx) error {
 // @Security ApiTokenAuth
 func HandleFindItem(c *fiber.Ctx) error {
 	var response config.DataResponse
-	var dataItem todomodel.ToDoItem
+	var dataItem domainmdl.ToDoItem
 
 	id, err := strconv.Atoi(c.Params("id"))
 
@@ -107,7 +107,7 @@ func HandleFindItem(c *fiber.Ctx) error {
 // @Security ApiTokenAuth
 func HandleFindAll(c *fiber.Ctx) error {
 	var response config.DataResponse
-	var dataItem []todomodel.ToDoItem
+	var dataItem []domainmdl.ToDoItem
 
 	if err := setup(c).FindAll(c, &dataItem); err != nil {
 		response.Message = err.Error()
@@ -124,7 +124,7 @@ func HandleFindAll(c *fiber.Ctx) error {
 // @Summary Update an item
 // @Description Update an item
 // @Param id path string true "Item ID"
-// @Param body body todomodel.UpdateItem true " "
+// @Param body body domainmdl.UpdateItem true " "
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} config.DataResponse "desc"
@@ -133,7 +133,7 @@ func HandleFindAll(c *fiber.Ctx) error {
 // @Security ApiTokenAuth
 func HandleEditItem(c *fiber.Ctx) error {
 	var response config.DataResponse
-	var dataItem todomodel.ToDoItem
+	var dataItem domainmdl.ToDoItem
 
 	if err := c.BodyParser(&dataItem); err != nil {
 		response.Message = err.Error()
@@ -171,7 +171,7 @@ func HandleEditItem(c *fiber.Ctx) error {
 // @Security ApiTokenAuth
 func HandleDeleteItem(c *fiber.Ctx) error {
 	var response config.DataResponse
-	var dataItem todomodel.ToDoItem
+	var dataItem domainmdl.ToDoItem
 
 	id, err := strconv.Atoi(c.Params("id"))
 

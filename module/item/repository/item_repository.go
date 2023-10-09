@@ -1,7 +1,7 @@
 package repository
 
 import (
-	todomodel "todo/module/item/model"
+	domainmdl "todo/domain/model"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -15,7 +15,7 @@ func NewPostgreSQLStorage(db *gorm.DB) *postgresqlStorage {
 	return &postgresqlStorage{db: db}
 }
 
-func (s *postgresqlStorage) CreateItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
+func (s *postgresqlStorage) CreateItem(ctx *fiber.Ctx, data *domainmdl.ToDoItem) error {
 	if err := s.db.Create(data).Error; err != nil {
 		return err
 	}
@@ -23,7 +23,7 @@ func (s *postgresqlStorage) CreateItem(ctx *fiber.Ctx, data *todomodel.ToDoItem)
 	return nil
 }
 
-func (s *postgresqlStorage) FindItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
+func (s *postgresqlStorage) FindItem(ctx *fiber.Ctx, data *domainmdl.ToDoItem) error {
 	if err := s.db.First(data).Error; err != nil {
 		return err
 	}
@@ -31,7 +31,7 @@ func (s *postgresqlStorage) FindItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) e
 	return nil
 }
 
-func (s *postgresqlStorage) FindAll(ctx *fiber.Ctx, data *[]todomodel.ToDoItem) error {
+func (s *postgresqlStorage) FindAll(ctx *fiber.Ctx, data *[]domainmdl.ToDoItem) error {
 	if err := s.db.Find(data).Error; err != nil {
 		return err
 	}
@@ -39,8 +39,8 @@ func (s *postgresqlStorage) FindAll(ctx *fiber.Ctx, data *[]todomodel.ToDoItem) 
 	return nil
 }
 
-func (s *postgresqlStorage) UpdateItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
-	var params todomodel.ToDoItem
+func (s *postgresqlStorage) UpdateItem(ctx *fiber.Ctx, data *domainmdl.ToDoItem) error {
+	var params domainmdl.ToDoItem
 
 	params.Title = data.Title
 	params.Status = data.Status
@@ -56,7 +56,7 @@ func (s *postgresqlStorage) UpdateItem(ctx *fiber.Ctx, data *todomodel.ToDoItem)
 	return nil
 }
 
-func (s *postgresqlStorage) DeleteItem(ctx *fiber.Ctx, data *todomodel.ToDoItem) error {
+func (s *postgresqlStorage) DeleteItem(ctx *fiber.Ctx, data *domainmdl.ToDoItem) error {
 	if err := s.db.First(data).Error; err != nil {
 		return err
 	}

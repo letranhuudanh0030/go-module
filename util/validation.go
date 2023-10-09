@@ -1,9 +1,9 @@
 package util
 
 import (
+	"fmt"
 	"reflect"
 	"strings"
-	"todo/config"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -14,18 +14,29 @@ type (
 	}
 
 	ErrorResponse struct {
-		Error       bool
-		FailedField string
-		Tag         string
-		Value       interface{}
-		KeyJson     string
+		Namespace       string `json:"namespace"`
+		Field           string `json:"field"`
+		StructNamespace string `json:"structNamespace"`
+		StructField     string `json:"structField"`
+		Tag             string `json:"tag"`
+		ActualTag       string `json:"actualTag"`
+		Kind            string `json:"kind"`
+		Type            string `json:"type"`
+		Value           string `json:"value"`
+		Param           string `json:"param"`
+		Message         string `json:"message"`
+		Error           bool
 	}
 )
 
 var validate = validator.New()
 
 func (v XValidator) Validate(data interface{}) []ErrorResponse {
+	// validationErrors := []ErrorResponse{}
 	validationErrors := []ErrorResponse{}
+	if err := registerValidations(validate); err != nil {
+		panic(err)
+	}
 
 	validate.RegisterTagNameFunc(func(fld reflect.StructField) string {
 		name := strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]
@@ -39,34 +50,26 @@ func (v XValidator) Validate(data interface{}) []ErrorResponse {
 	errs := validate.Struct(data)
 	if errs != nil {
 		for _, err := range errs.(validator.ValidationErrors) {
-			// In this case data object is actually holding the User struct
-			var elem ErrorResponse
-
-			elem.FailedField = err.Field() // Export struct field name
-			elem.Tag = err.Tag()           // Export struct tag
-			elem.Value = err.Value()       // Export field value
-			elem.Error = true
-
+			elem := ErrorResponse{
+				Namespace:       err.Namespace(),
+				Field:           err.Field(),
+				StructNamespace: err.StructNamespace(),
+				StructField:     err.StructField(),
+				Tag:             err.Tag(),
+				ActualTag:       err.ActualTag(),
+				Kind:            fmt.Sprintf("%v", err.Kind()),
+				Type:            fmt.Sprintf("%v", err.Type()),
+				Value:           fmt.Sprintf("%v", err.Value()),
+				Param:           err.Param(),
+				Message:         err.Error(),
+				Error:           true,
+			}
+			ConvertFieldName(&elem)
 			validationErrors = append(validationErrors, elem)
 		}
 	}
 
 	return validationErrors
-}
-
-func getMessageCode(tag string) string {
-	var msgCode string
-
-	switch tag {
-	case "required":
-		msgCode = config.REQUIRED
-	case "min":
-		msgCode = config.MIN_LENGTH
-	case "max":
-		msgCode = config.MAX_LENGTH
-	}
-
-	return msgCode
 }
 
 func Validator(data interface{}) map[string]string {
@@ -79,7 +82,7 @@ func Validator(data interface{}) map[string]string {
 		errMsgs := make(map[string]string)
 
 		for _, err := range errs {
-			errMsgs[err.FailedField] = getMessageCode(err.Tag)
+			errMsgs[err.Field] = getMessageCode(err)
 		}
 
 		return errMsgs

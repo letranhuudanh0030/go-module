@@ -1,4 +1,4 @@
-package todomodel
+package domainmdl
 
 import (
 	"errors"

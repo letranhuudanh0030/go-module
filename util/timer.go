@@ -16,9 +16,14 @@ func ConvertTimeFieldsToTimeZone(s interface{}, timezone *time.Location) {
 
 		if fieldType == reflect.TypeOf(time.Time{}) || fieldType == reflect.TypeOf(&time.Time{}) {
 			// Convert time.Time and *time.Time fields
-			if field.CanSet() && !field.IsNil() {
-				convertedTime := field.Interface().(*time.Time).In(timezone)
-				field.Set(reflect.ValueOf(&convertedTime))
+			if field.CanSet() {
+				if field.Kind() == reflect.Ptr && !field.IsNil() {
+					convertedTime := field.Interface().(*time.Time).In(timezone)
+					field.Set(reflect.ValueOf(&convertedTime))
+				} else {
+					convertedTime := field.Interface().(time.Time).In(timezone)
+					field.Set(reflect.ValueOf(convertedTime))
+				}
 			}
 		} else if fieldType == reflect.TypeOf(gorm.DeletedAt{}) {
 			// Convert gorm.DeletedAt fields
@@ -32,4 +37,8 @@ func ConvertTimeFieldsToTimeZone(s interface{}, timezone *time.Location) {
 			}
 		}
 	}
+}
+
+func ConvertToDate(t int64) string {
+	return time.UnixMilli(t).Format("2006-01-02")
 }

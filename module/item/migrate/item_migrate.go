@@ -2,10 +2,10 @@ package todomigrate
 
 import (
 	"todo/database"
-	todomodel "todo/module/item/model"
+	doaminmdl "todo/domain/model"
 )
 
 func AutoMigrate() {
 	db := database.DB
-	db.AutoMigrate(&todomodel.ToDoItem{})
+	db.AutoMigrate(&doaminmdl.ToDoItem{})
 }
